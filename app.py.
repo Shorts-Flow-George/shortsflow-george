@@ -1,0 +1,30 @@
+from flask import Flask, request, redirect
+import sqlite3
+
+app = Flask(__name__)
+
+# Створюємо базу даних
+def init_db():
+    conn = sqlite3.connect('shorts_flow.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users
+                      (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       username TEXT,
+                       password TEXT)''')
+    conn.commit()
+    conn.close()
+
+@app.route('/')
+def home():
+    return '''
+    <form action="/register" method="post">
+        <h2>Регистрация в Shorts Flow</h2>
+        <input type="text" name="username" placeholder="Логин" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <button type="submit">Создать аккаунт</button>
+    </form>
+    '''
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)
